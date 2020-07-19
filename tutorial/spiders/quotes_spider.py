@@ -1,4 +1,4 @@
-from scrapy import Request, Spider
+from scrapy import Spider
 
 
 class QuotesSpider(Spider):
@@ -18,5 +18,5 @@ class QuotesSpider(Spider):
             }
         next_page = response.css("li.next a::attr(href)").get()
         if next_page is not None:
-            next_page = response.urljoin(next_page)
-            yield Request(url=next_page, callback=self.parse)
+            # response.follow supports relative URLs directly - no need to call urljoin.
+            yield response.follow(next_page, callback=self.parse)
